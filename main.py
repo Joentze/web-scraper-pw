@@ -1,4 +1,4 @@
-
+from urllib.parse import urljoin
 from time import time
 from threading import Thread
 from playwright.sync_api import sync_playwright
@@ -7,17 +7,15 @@ from parser import parse_tags, parse_tags_by_class
 
 configs=[
     {
-    "url":"https://www.channelnewsasia.com/?cid=google_sem_paid_12042022_cnamkt&gclid=CjwKCAjwp9qZBhBkEiwAsYFsb_9Ur0tbWTMgZ4dKxwPckd4rK2vLPs-zjeK1fX0K-31lxDvvAIy3wxoCBywQAvD_BwE"
+    "url":"https://www.channelnewsasia.com/"
 },{
-    "url":"https://www.channelnewsasia.com/?cid=google_sem_paid_12042022_cnamkt&gclid=CjwKCAjwp9qZBhBkEiwAsYFsb_9Ur0tbWTMgZ4dKxwPckd4rK2vLPs-zjeK1fX0K-31lxDvvAIy3wxoCBywQAvD_BwE"
+    "url":"https://www.channelnewsasia.com/latest-news"
 },{
-    "url":"https://www.channelnewsasia.com/?cid=google_sem_paid_12042022_cnamkt&gclid=CjwKCAjwp9qZBhBkEiwAsYFsb_9Ur0tbWTMgZ4dKxwPckd4rK2vLPs-zjeK1fX0K-31lxDvvAIy3wxoCBywQAvD_BwE"
+    "url":"https://www.quark.bz"
 },{
     "url":"https://www.channelnewsasia.com/?cid=google_sem_paid_12042022_cnamkt&gclid=CjwKCAjwp9qZBhBkEiwAsYFsb_9Ur0tbWTMgZ4dKxwPckd4rK2vLPs-zjeK1fX0K-31lxDvvAIy3wxoCBywQAvD_BwE"
 },
 ]
-
-
 
 def segment_content(content:list[object],num_of_threads:int)->None:
     segments = []
@@ -31,7 +29,6 @@ def segment_content(content:list[object],num_of_threads:int)->None:
 
 
 def get_inner_html(config:object)->str:
-    
     html=""
     #SET DEFAULT WAIT SELECTOR
     if "wait_for_selector" not in config.keys():
@@ -46,9 +43,9 @@ def get_inner_html(config:object)->str:
         page.wait_for_selector(w_sel)
         html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
         #//{tag}[@{identifier}='{name}']
-        # print([i.get_attribute("href") for i in page.query_selector_all(f"//a[@class='h6__link list-object__heading-link']")])
-    # print(parse_tags_by_class("a","h6__link list-object__heading-link",html))
-
+        # print([i.get_attribute("href") for i in page.query_selector_all(f"   //a[@class='h6__link list-object__heading-link']")])
+        
+    print([urljoin(config["url"], tag["href"]) for tag in parse_tags_by_class("a","h6__link list-object__heading-link",html)])
     return html 
 
 def get_segment_inner_html(segment:list[object])->None:
@@ -60,9 +57,9 @@ if __name__ == "__main__":
     start = time()
     
     TOTAL_THREADS = MAX_NUM_OF_THREADS
-    
-    [print(len(x)) for x in segment_content(configs, TOTAL_THREADS)]
-    threads = [Thread(target=get_segment_inner_html,args=[x]) for x in segment_content(configs, TOTAL_THREADS)]
+    # [print(len(x)) for x in segment_content(configs, TOTAL_THREADS)]
+    threads = [Thread(target=get_segment_inner_html,args=[x]) 
+                for x in segment_content(configs, TOTAL_THREADS)]
     #START THREADS
     for t in threads:
         t.start()
