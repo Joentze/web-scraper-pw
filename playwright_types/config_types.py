@@ -1,6 +1,6 @@
-from typing import Dict
+# from typing import Dict
 
-PageImpressionType = Dict['str','object' or 'str']
+# PageImpressionType = Dict['str','object' or 'str']
 config_keys = []
 
 def is_valid_config(config:PageImpressionType)->bool:
