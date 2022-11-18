@@ -1,19 +1,29 @@
-from urllib.parse import urljoin
+
 from time import time
 from threading import Thread
 from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
 from parser import parse_tags, parse_tags_by_class
+# from config_types import is_valid_config
 
 configs=[
     {
-    "url":"https://www.channelnewsasia.com/"
+    "url":"https://www.channelnewsasia.com/singapore/apec-inclusive-growth-digital-economy-3084021",
+    "tag":"div",
+    "class_name":"text"
+
 },{
-    "url":"https://www.channelnewsasia.com/latest-news"
+    "url":"https://www.channelnewsasia.com/latest-news",
+    "tag":"a",
+    "class_name":"h6__link list-object__heading-link"
 },{
-    "url":"https://www.quark.bz"
+    "url":"https://www.quark.bz",
+    "tag":"",
+    "class_name":""
 },{
-    "url":"https://www.channelnewsasia.com/?cid=google_sem_paid_12042022_cnamkt&gclid=CjwKCAjwp9qZBhBkEiwAsYFsb_9Ur0tbWTMgZ4dKxwPckd4rK2vLPs-zjeK1fX0K-31lxDvvAIy3wxoCBywQAvD_BwE"
+    "url":"https://www.channelnewsasia.com/?cid=google_sem_paid_12042022_cnamkt&gclid=CjwKCAjwp9qZBhBkEiwAsYFsb_9Ur0tbWTMgZ4dKxwPckd4rK2vLPs-zjeK1fX0K-31lxDvvAIy3wxoCBywQAvD_BwE",
+    "tag":"",
+    "class_name":""
 },
 ]
 
@@ -45,19 +55,21 @@ def get_inner_html(config:object)->str:
         #//{tag}[@{identifier}='{name}']
         # print([i.get_attribute("href") for i in page.query_selector_all(f"   //a[@class='h6__link list-object__heading-link']")])
         
-    print([urljoin(config["url"], tag["href"]) for tag in parse_tags_by_class("a","h6__link list-object__heading-link",html)])
+        print(parse_tags_by_class(config["tag"],config["class_name"],html))
     return html 
 
 def get_segment_inner_html(segment:list[object])->None:
     for config in segment:
         get_inner_html(config)
 
-
 if __name__ == "__main__":
     start = time()
     
     TOTAL_THREADS = MAX_NUM_OF_THREADS
     # [print(len(x)) for x in segment_content(configs, TOTAL_THREADS)]
+    # if len(configs) != len([config for config in configs if is_valid_config(config)]):
+    #     raise Exception("configs are not of valid types")
+
     threads = [Thread(target=get_segment_inner_html,args=[x]) 
                 for x in segment_content(configs, TOTAL_THREADS)]
     #START THREADS
