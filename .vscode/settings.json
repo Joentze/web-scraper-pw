@@ -1,5 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./playwright_types"
-    ]
-}
