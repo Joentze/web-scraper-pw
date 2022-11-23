@@ -1,9 +1,10 @@
 
 from time import time
 from threading import Thread
+from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
-from parser import parse_tags, parse_tags_by_class
+from parser import get_full_urls_for_href, parse_tags, parse_tags_by_class
 # from config_types import is_valid_config
 test = []
 configs=[
