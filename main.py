@@ -5,49 +5,24 @@ from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
 from parser import parse_tags, parse_tags_by_class
 # from config_types import is_valid_config
-
+test = []
 configs=[
     {
-    "url":"https://www.reuters.com/world/us/how-biden-white-house-scrambled-after-poland-missile-blast-2022-11-18/",
-    "tag":"p",
-    "class_name":"text__text__1FZLe text__dark-grey__3Ml43 text__regular__2N1Xr text__large__nEccO body__full_width__ekUdw body__large_body__FV5_X article-body__element__2p5pI",
-    "wait_for_selector":"#main-content > article > div > div.article__main__33WV2 > div:nth-child(3) > div > div.article-body__content__17Yit.paywall-article"
+    "url":"https://twitter.com/elonmusk",
+    "tag":"div",
+    "class_name":"css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2",
+    # "delay":2000,
+    # "wait_for_selector":"#react-root > div > div > div.css-1dbjc4n.r-18u37iz.r-13qz1uu.r-417010 > main > div > div > div > div.css-1dbjc4n.r-kemksi.r-1kqtdi0.r-1ljd8xs.r-13l2t4g.r-1phboty.r-1jgb5lz.r-11wrixw.r-61z16t.r-1ye8kvj.r-13qz1uu.r-184en5c > div > div:nth-child(3) > div > div > section > div > div > div:nth-child(1) > div > div > div > article > div"
     }
-,{
-    "url":"https://www.reuters.com/world/us/hakeem-jeffries-launches-bid-lead-us-house-democrats-2022-11-18/",
-    "tag":"p",
-    "class_name":"text__text__1FZLe text__dark-grey__3Ml43 text__regular__2N1Xr text__large__nEccO body__full_width__ekUdw body__large_body__FV5_X article-body__element__2p5pI",
-    "wait_for_selector":"#main-content > article > div > div.article__main__33WV2 > div:nth-child(3) > div > div.article-body__content__17Yit.paywall-article"
-    },{
-    "url":"https://www.reuters.com/world/us/democrat-frisch-concedes-republican-incumbent-boebert-us-house-election-colorado-2022-11-18/",
-    "tag":"p",
-    "class_name":"text__text__1FZLe text__dark-grey__3Ml43 text__regular__2N1Xr text__large__nEccO body__full_width__ekUdw body__large_body__FV5_X article-body__element__2p5pI",
-    "wait_for_selector":"#main-content > article > div > div.article__main__33WV2 > div:nth-child(3) > div > div.article-body__content__17Yit.paywall-article"
-    },{
-    "url":"https://www.reuters.com/legal/us-urges-jury-convict-oath-keepers-plotting-block-peaceful-transfer-power-2022-11-18/",
-    "tag":"p",
-    "class_name":"text__text__1FZLe text__dark-grey__3Ml43 text__regular__2N1Xr text__large__nEccO body__full_width__ekUdw body__large_body__FV5_X article-body__element__2p5pI",
-    "wait_for_selector":"#main-content > article > div > div.article__main__33WV2 > div:nth-child(3) > div > div.article-body__content__17Yit.paywall-article"
-    },{
-    "url":"https://duckduckgo.com/?q=apples&kp=1&t=h_&iax=images&ia=images",
-    "tag":"img",
-    "class_name":"tile--img__img js-lazyload",
-    "wait_for_selector":"#zci-images > div > div.tile-wrap > div > div:nth-child(3) > div.tile--img__media > span > img"
-    },{
-    "url":"https://duckduckgo.com/?q=apples&kp=1&t=h_&iax=images&ia=images",
-    "tag":"img",
-    "class_name":"tile--img__img js-lazyload",
-    "wait_for_selector":"#zci-images > div > div.tile-wrap > div > div:nth-child(3) > div.tile--img__media > span > img"
-    }
+
 ]
 def segment_content(content:list[object],num_of_threads:int)->None:
     segments = [[] for i in range(num_of_threads)]
-    print(segments)
     for i, config in enumerate(content):
         multiplier = i // num_of_threads
         segments[i - num_of_threads*multiplier].append(config)
-    print(segments)
     return segments
+
 def get_inner_html(config:object)->str:
     html=""
     #SET DEFAULT WAIT SELECTOR
@@ -58,14 +33,17 @@ def get_inner_html(config:object)->str:
     #OPENS WEB DRIVER
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=PLAYWRIGHT_HEADLESS, timeout=PLAYWRIGHT_TIMEOUT)
-        page = browser.new_page(java_script_enabled=True)
+        page = browser.new_page(java_script_enabled=True, user_agent="my-user-agent")
         page.goto(config["url"],wait_until="domcontentloaded")
+        if "delay" in config:
+            page.wait_for_timeout(config["delay"])
         page.wait_for_selector(w_sel)
         html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
         #//{tag}[@{identifier}='{name}']
         # print([i.get_attribute("href") for i in page.query_selector_all(f"   //a[@class='h6__link list-object__heading-link']")])
         print(config["url"])
-        # print(parse_tags_by_class(config["tag"],config["class_name"],html))
+        print(parse_tags_by_class(config["tag"],config["class_name"],html))
+        test.append(parse_tags_by_class(config["tag"],config["class_name"],html))
     return html 
 
 def get_segment_inner_html(segment:list[object])->None:
@@ -88,5 +66,6 @@ if __name__ == "__main__":
     #JOIN THREADS
     for t in threads:
         t.join()
-    
+    print(len(configs), "===",len(test))
     print(f'\n{"="*5+str(time()-start)+"s"+"="*5}')
+    
