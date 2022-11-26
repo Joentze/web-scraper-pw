@@ -8,11 +8,10 @@ from parser import parse_tags, parse_tags_by_class
 test = []
 configs=[
     {
-    "url":"https://twitter.com/elonmusk",
-    "tag":"div",
-    "class_name":"css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2",
-    "delay":2000,
-    "wait_for_selector":"#react-root > div > div > div.css-1dbjc4n.r-18u37iz.r-13qz1uu.r-417010 > main > div > div > div > div.css-1dbjc4n.r-kemksi.r-1kqtdi0.r-1ljd8xs.r-13l2t4g.r-1phboty.r-1jgb5lz.r-11wrixw.r-61z16t.r-1ye8kvj.r-13qz1uu.r-184en5c > div > div:nth-child(3) > div > div > section > div > div > div:nth-child(1) > div > div > div > article > div"
+    "url":"https://shafaq.com/en/all-news",
+    "tag":"a",
+    "class_name":"overflow-hidden rounded-sm",
+    "wait_for_selector":"body > main > div > div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3 > article:nth-child(1) > a"
     }
 
 ]
@@ -49,6 +48,16 @@ def get_inner_html(config:object)->str:
 def get_segment_inner_html(segment:list[object])->None:
     for config in segment:
         get_inner_html(config)
+
+def run_scraper(configs):
+    threads = [Thread(target=get_segment_inner_html,args=[x]) 
+                for x in segment_content(configs, MAX_NUM_OF_THREADS)]
+    #START THREADS
+    for t in threads:
+        t.start()
+    #JOIN THREADS
+    for t in threads:
+        t.join()
 
 if __name__ == "__main__":
     start = time()
