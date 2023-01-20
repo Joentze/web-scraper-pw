@@ -13,8 +13,7 @@ miss = []
 
 configs = [
     {
-        "url": "",
-        "wait_for_selector": "",
+        "url": "https://boundbywine.com/collections/wine-1/products/lagertal-holunder-goldtraminer-2020",
         "items": [
             {
                 "tag": "h1",
@@ -72,15 +71,15 @@ def get_inner_html(config: object) -> str:
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
 
-            # item_contents = [[config["url"]]]
+            item_contents = [[config["url"]]]
 
-            # for item in config["items"]:
+            for item in config["items"]:
 
-            #     item_contents.append(parse_tags_by_class(
-            #         item["tag"], item["class_name"], html))
+                item_contents.append(parse_tags_by_class(
+                    item["tag"], item["class_name"], html))
 
-            # results.append(item_contents)
-            # results.append(get_full_urls_for_href(config,parse_tags_by_class(config["tag"],config["class_name"],html), "href"))
+            results.append(item_contents)
+            results.append(get_full_urls_for_href(config,parse_tags_by_class(config["tag"],config["class_name"],html), "href"))
     except:
 
         miss.append(config["url"])
@@ -102,6 +101,7 @@ def run_scraper(configs):
     # JOIN THREADS
     for t in threads:
         t.join()
+    print(results)
 
 
 if __name__ == "__main__":

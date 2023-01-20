@@ -3,10 +3,23 @@ import os
 
 configs=[
     {
-    "url":"https://shafaq.com/en/all-news",
-    "tag":"a",
-    "class_name":"overflow-hidden rounded-sm",
-    "wait_for_selector":"body > main > div > div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3 > article:nth-child(1) > a"
+        "url": "https://boundbywine.com/collections/wine-1/products/lagertal-holunder-goldtraminer-2020",
+        "items": [
+            {
+                "tag": "h1",
+                "class_name": "custom-font product-description-header",
+
+            }, {
+                "tag": "div",
+                "class_name": "accordion-container accordion-container--product",
+
+            }, {
+                "tag": "div",
+                "class_name": "description-block__content",
+
+            }
+        ],
+
     }
 
 ]
