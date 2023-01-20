@@ -1,7 +1,10 @@
 name: CRON_SCRAPE
 on:
-  schedule:
-    - cron: "0 * * * *"
+  push:
+    branches:
+      - "feat/notion-db-git-cron"
+  # schedule:
+  #   - cron: "0 * * * *"
 jobs:
   container-cron-job:
     runs-on: ubuntu-latest
