@@ -23,6 +23,6 @@ jobs:
         run: |
           python pw_scrape.py
         env:
-          NOTION_DB_SCRAPE_ID: ${{ env.NOTION_DB_SCRAPE_ID }}
-          NOTION_DB_RESULTS_ID: ${{ env.NOTION_DB_RESULTS_ID }}
-          NOTION_API_LINK: ${{ env.NOTION_API_LINK }}
+          NOTION_DB_SCRAPE_ID: ${{ vars.NOTION_DB_SCRAPE_ID }}
+          NOTION_DB_RESULTS_ID: ${{ vars.NOTION_DB_RESULTS_ID }}
+          NOTION_API_LINK: ${{ vars.NOTION_API_LINK }}
