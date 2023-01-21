@@ -82,8 +82,8 @@ def get_inner_html(config: object) -> str:
                     item["tag"], item["class_name"], html))
 
             results.append({"url":config["url"], "results":item_contents[0]})
+            post_scraped_results({"url":config["url"], "results":item_contents[0]})
             # results.append(get_full_urls_for_href(config,parse_tags_by_class(config["tag"],config["class_name"],html), "href"))
-            return {"url":config["url"], "results":item_contents}
     except:
 
         miss.append(config["url"])
@@ -132,8 +132,8 @@ if __name__ == "__main__":
     # with open("all_links.txt","w") as file:
     #     write_str = "\n".join(list(set(all_links)))
     #     file.write(write_str)
-    for result in results:
-        post_scraped_results(result)
+    # for result in results:
+    #     post_scraped_results(result)
 
     print(len(configs), "===", len(results))
     print(f'\n{"="*5+str(time()-start)+"s"+"="*5}')
