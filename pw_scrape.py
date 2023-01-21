@@ -81,23 +81,19 @@ def get_inner_html(config: object) -> str:
                 item_contents.append(parse_tags_by_class(
                     item["tag"], item["class_name"], html))
 
-            results.append(item_contents)
+            results.append({"url":config["url"], "results":item_contents[0]})
             # results.append(get_full_urls_for_href(config,parse_tags_by_class(config["tag"],config["class_name"],html), "href"))
             return {"url":config["url"], "results":item_contents}
     except:
 
         miss.append(config["url"])
 
-    return {"url": config["url"], "items": config["items"]}
+    # return {"url": config["url"], "items": config["items"]}
 
 
 def get_segment_inner_html(segment: list[object]) -> None:
     for config in segment:
-        results = get_inner_html(config)
-        try:
-            post_scraped_results(results)
-        except:
-            pass
+        get_inner_html(config)
 
 
 def run_scraper(configs):
@@ -136,7 +132,8 @@ if __name__ == "__main__":
     # with open("all_links.txt","w") as file:
     #     write_str = "\n".join(list(set(all_links)))
     #     file.write(write_str)
-    # print(results)
+    for result in results:
+        post_scraped_results(result)
 
     print(len(configs), "===", len(results))
     print(f'\n{"="*5+str(time()-start)+"s"+"="*5}')

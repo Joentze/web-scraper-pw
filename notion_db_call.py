@@ -24,7 +24,7 @@ def post_scraped_results(results:list)->None:
         "email":"-",
         "feedback":str(results)
     })
-
+    print(response)
 
 if __name__ == "__main__":
     print(ast.literal_eval(get_configs_to_scrape()[0].replace("'",'"')))
