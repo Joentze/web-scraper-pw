@@ -2,9 +2,9 @@ import os
 from requests import post, get
 import json
 import ast
-NOTION_DB_SCRAPE_ID = "757b1751367b4e3093bdc190806c9ad4"#os.environ["NOTION_DB_SCRAPE_ID"]
-NOTION_DB_RESULTS_ID = "e909759e59664a65882e1e789cc3b389"#os.environ["NOTION_DB_RESULTS_ID"]
-NOTION_API_LINK = "https://notion-cms-zkp2mxinrq-as.a.run.app"#os.environ["NOTION_API_LINK"]
+NOTION_DB_SCRAPE_ID = os.environ["NOTION_DB_SCRAPE_ID"]
+NOTION_DB_RESULTS_ID = os.environ["NOTION_DB_RESULTS_ID"]
+NOTION_API_LINK = os.environ["NOTION_API_LINK"]
 
 def get_configs_to_scrape()->list[object]:
     configs = []
