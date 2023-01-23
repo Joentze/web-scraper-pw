@@ -81,7 +81,8 @@ def get_inner_html(config: object) -> str:
                 item_contents.append(result)
                 print("result: ", result)
 
-    except:
+    except Exception as e:
+        print(e)
         miss.append(config["url"])
 
     return {"url": config["url"], "items": item_contents[:2]}
