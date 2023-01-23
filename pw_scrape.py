@@ -74,7 +74,7 @@ def get_inner_html(config: object) -> str:
             page.wait_for_selector(w_sel)
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
-
+            print(html)
             for item in config["items"]:
                 result = parse_tags_by_class(
                     item["tag"], item["class_name"], html)
