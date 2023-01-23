@@ -79,6 +79,7 @@ def get_inner_html(config: object) -> str:
                 result = parse_tags_by_class(
                     item["tag"], item["class_name"], html)
                 item_contents.append(result)
+                print("result: ", result)
 
     except:
         miss.append(config["url"])
