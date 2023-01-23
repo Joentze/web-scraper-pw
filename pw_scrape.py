@@ -76,18 +76,20 @@ def get_inner_html(config: object) -> str:
             item_contents = [[config["url"]]]
 
             for item in config["items"]:
-
+                print(item)
                 item_contents.append(parse_tags_by_class(
                     item["tag"], item["class_name"], html))
 
             results.append(item_contents)
+            for item in item_contents:
+                post_scraped_results({"url":config["url"], "results":item})
             # results.append(get_full_urls_for_href(config,parse_tags_by_class(config["tag"],config["class_name"],html), "href"))
             return {"url":config["url"], "results":item_contents}
     except:
 
         miss.append(config["url"])
 
-    return {"url": config["url"], "items": config["items"]}
+    # return {"url": config["url"], "items": config["items"]}
 
 
 def get_segment_inner_html(segment: list[object]) -> None:
