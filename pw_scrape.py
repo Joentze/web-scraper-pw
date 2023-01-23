@@ -48,6 +48,8 @@ def segment_content(content: list[object], num_of_threads: int) -> None:
 
 def get_inner_html(config: object) -> str:
     html = ""
+    
+    item_contents = [[config["url"]]]
     # SET DEFAULT WAIT SELECTOR
     if "wait_for_selector" not in config.keys():
         w_sel = "html"
@@ -73,28 +75,21 @@ def get_inner_html(config: object) -> str:
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
 
-            item_contents = [[config["url"]]]
-
             for item in config["items"]:
-                print(item)
-                item_contents.append(parse_tags_by_class(
-                    item["tag"], item["class_name"], html))
+                result = parse_tags_by_class(
+                    item["tag"], item["class_name"], html)
+                item_contents.append(result)
 
-            results.append(item_contents)
-            for item in item_contents:
-                post_scraped_results({"url":config["url"], "results":item})
-            # results.append(get_full_urls_for_href(config,parse_tags_by_class(config["tag"],config["class_name"],html), "href"))
-            return {"url":config["url"], "results":item_contents}
     except:
-
         miss.append(config["url"])
 
-    # return {"url": config["url"], "items": config["items"]}
+    return {"url": config["url"], "items": item_contents[:2]}
 
 
 def get_segment_inner_html(segment: list[object]) -> None:
     for config in segment:
         results = get_inner_html(config)
+        print(results)
         try:
             post_scraped_results(results)
         except:
