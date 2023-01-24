@@ -11,30 +11,30 @@ results = []
 
 miss = []
 
-configs = get_configs_to_scrape()
+# configs = get_configs_to_scrape()
 
-# configs = [
-#     {
-#         "url": "https://boundbywine.com/collections/wine-1/products/lagertal-holunder-goldtraminer-2020",
-#         "items": [
-#             {
-#                 "tag": "h1",
-#                 "class_name": "custom-font product-description-header",
+configs = [
+    {
+        "url": "https://boundbywine.com/collections/wine-1/products/lagertal-holunder-goldtraminer-2020",
+        "items": [
+            {
+                "tag": "h1",
+                "class_name": "custom-font product-description-header",
 
-#             }, {
-#                 "tag": "div",
-#                 "class_name": "accordion-container accordion-container--product",
+            }, {
+                "tag": "div",
+                "class_name": "accordion-container accordion-container--product",
 
-#             }, {
-#                 "tag": "div",
-#                 "class_name": "description-block__content",
+            }, {
+                "tag": "div",
+                "class_name": "description-block__content",
 
-#             }
-#         ],
+            }
+        ],
 
-#     }
+    }
 
-# ]
+]
 print(configs)
 
 
@@ -82,7 +82,7 @@ def get_inner_html(config: object) -> object:
         
         miss.append(config["url"])
 
-    return {"url": config["url"], "items": item_contents}
+    return {"url": config["url"], "results": item_contents}
 
 
 def get_tags_by_class(html, items)->list[object]:
@@ -97,50 +97,25 @@ def get_tags_by_class(html, items)->list[object]:
 def get_segment_inner_html(segment: list[object]) -> None:
     for config in segment:
         results = get_inner_html(config)
-        print(results)
         try:
             post_scraped_results(results)
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
 
 def run_scraper(configs):
     threads = [Thread(target=get_segment_inner_html, args=[x])
                for x in segment_content(configs, MAX_NUM_OF_THREADS)]
     # START THREADS
-    for t in threads:
-        t.start()
+    for thread in threads:
+        thread.start()
     # JOIN THREADS
-    for t in threads:
-        t.join()
-    # print(results)
+    for thread in threads:
+        thread.join()
 
 
 if __name__ == "__main__":
     start = time()
-
-    TOTAL_THREADS = MAX_NUM_OF_THREADS
-    # [print(len(x)) for x in segment_content(configs, TOTAL_THREADS)]
-    # if len(configs) != len([config for config in configs if is_valid_config(config)]):
-    #     raise Exception("configs are not of valid types")
-
-    threads = [Thread(target=get_segment_inner_html, args=[x])
-               for x in segment_content(configs, TOTAL_THREADS)]
-    # START THREADS
-    for t in threads:
-        t.start()
-    # JOIN THREADS
-    for t in threads:
-        t.join()
-
-    # all_links = []
-    # for link_list in results:
-    #     all_links+=link_list
-
-    # with open("all_links.txt","w") as file:
-    #     write_str = "\n".join(list(set(all_links)))
-    #     file.write(write_str)
-    # print(results)
-
+    run_scraper(configs)
     print(len(configs), "===", len(results))
     print(f'\n{"="*5+str(time()-start)+"s"+"="*5}')

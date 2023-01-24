@@ -9,6 +9,10 @@ def parse_tags_by_class(tag:str, class_name:str, html:str)->list:
     soup = BeautifulSoup(html,"html.parser")
     return soup.find_all(tag, {"class":class_name})
 
+def parse_tag_by_id(tag:str, id:str, html:str)->list:
+    soup = BeautifulSoup(html,"html.parser")
+    return soup.find(tag, {"id":id})
+
 def get_attribute_by_class(attribute:str ,tag:str, class_name:str, html:str)->list:
     return [tag[attribute] for tag in parse_tags_by_class(tag,class_name,html)]
 
