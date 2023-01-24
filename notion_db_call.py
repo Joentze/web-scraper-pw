@@ -10,11 +10,6 @@ def get_configs_to_scrape()->list[object]:
     configs = []
     response = get(F"{NOTION_API_LINK}/db/{NOTION_DB_SCRAPE_ID}").json()
     for result in response["results"]:
-        # print({
-        #     "name":result["properties"]["Name"]["title"][0]["plain_text"],
-        #     "link":result["properties"]["Link"]["rich_text"][0]["plain_text"],
-        #     "config":result["properties"]["Config"]["rich_text"][0]["plain_text"]
-        # })
         configs.append(result["properties"]["Config"]["rich_text"][0]["plain_text"])
     return [ast.literal_eval(config) for config in configs]
 
