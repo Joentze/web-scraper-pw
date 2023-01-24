@@ -4,7 +4,7 @@ from threading import Thread
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
-from parser import get_full_urls_for_href, parse_tags, parse_tags_by_class
+from bs4_parser import get_full_urls_for_href, parse_tags, parse_tags_by_class
 from notion_db_call import get_configs_to_scrape, post_scraped_results
 # from config_types import is_valid_conf cig
 results = []
