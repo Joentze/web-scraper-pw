@@ -4,8 +4,8 @@ from threading import Thread
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
-from bs4_parser import get_full_urls_for_href, parse_tags, parse_tags_by_class
-from notion_db_call import get_configs_to_scrape, post_scraped_results
+from bs4_parser import get_full_urls_for_href, parse_tags, parse_tags_by_class, parse_tag_by_id
+# from notion_db_call import get_configs_to_scrape, post_scraped_results
 # from config_types import is_valid_conf cig
 results = []
 
@@ -29,7 +29,12 @@ configs = [
                 "tag": "div",
                 "class_name": "description-block__content",
 
-            }
+            },
+            {
+                "tag": "div",
+                "id": "shopify-section-template--14586446217314__main",
+
+            },
         ],
 
     }
@@ -74,7 +79,7 @@ def get_inner_html(config: object) -> object:
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
 
-            item_contents = get_tags_by_class(html, config["items"])
+            item_contents = get_tags(html, config["items"])
 
     except Exception as e:
 
@@ -85,12 +90,24 @@ def get_inner_html(config: object) -> object:
     return {"url": config["url"], "results": item_contents}
 
 
-def get_tags_by_class(html, items)->list[object]:
+def get_tags(html, items)->list[object]:
     item_contents = []    
+
     for item in items:
-        result = parse_tags_by_class(
-        item["tag"], item["class_name"], html)
+        
+        keys = item.keys()
+
+        if "class_name" in keys:
+
+            result = parse_tags_by_class(
+            item["tag"], item["class_name"], html)
+
+        elif "id" in keys:
+
+            result = parse_tag_by_id(item["tag"], item["id"], html)
+
         item_contents.append(result)
+    
     return item_contents
 
 
@@ -98,7 +115,8 @@ def get_segment_inner_html(segment: list[object]) -> None:
     for config in segment:
         results = get_inner_html(config)
         try:
-            post_scraped_results(results)
+            # post_scraped_results(results)
+            print(results)
         except Exception as e:
             print(e)
 
