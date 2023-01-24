@@ -46,10 +46,9 @@ def segment_content(content: list[object], num_of_threads: int) -> None:
     return segments
 
 
-def get_inner_html(config: object) -> str:
+def get_inner_html(config: object) -> object:
     html = ""
     
-    item_contents = [[config["url"]]]
     # SET DEFAULT WAIT SELECTOR
     if "wait_for_selector" not in config.keys():
         w_sel = "html"
@@ -74,18 +73,25 @@ def get_inner_html(config: object) -> str:
             page.wait_for_selector(w_sel)
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
-            print(html)
-            for item in config["items"]:
-                result = parse_tags_by_class(
-                    item["tag"], item["class_name"], html)
-                item_contents.append(result)
-                print("result: ", result)
+
+            item_contents = get_tags_by_class(html, config["items"])
 
     except Exception as e:
+
         print(e)
+        
         miss.append(config["url"])
 
-    return {"url": config["url"], "items": item_contents[:2]}
+    return {"url": config["url"], "items": item_contents}
+
+
+def get_tags_by_class(html, items)->list[object]:
+    item_contents = []    
+    for item in items:
+        result = parse_tags_by_class(
+        item["tag"], item["class_name"], html)
+        item_contents.append(result)
+    return item_contents
 
 
 def get_segment_inner_html(segment: list[object]) -> None:
