@@ -1,7 +1,7 @@
 # from google.cloud import pubsub_v1
 from pw_scrape import run_scraper
 from concurrent.futures import TimeoutError
-# import ast
+import ast
 import os
 # import json
 import base64
@@ -9,7 +9,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-PORT = 8080#int(os.environ["PORT"])
+PORT = int(os.environ["PORT"])
 
 # # credentials_path = "/Users/tanjoen/Documents/web-scraper-pw/credentials/croft_pubsub_key.json"
 
@@ -55,11 +55,15 @@ def index():
 
     pubsub_message = envelope["message"]
 
-    name = "World"
     if isinstance(pubsub_message, dict) and "data" in pubsub_message:
-        name = base64.b64decode(pubsub_message["data"]).decode("utf-8").strip()
-
-    print(f"Hello {name}!")
+        string_obj = base64.b64decode(pubsub_message["data"]).decode("utf-8").strip()
+    
+    data_configs = ast.literal_eval(string_obj)
+    
+    if data_configs and "configs" in data_configs:
+        run_scraper(data_configs["configs"])
+    else:
+        return ("", 400)
 
     return ("", 204)
 
