@@ -4,23 +4,14 @@ from threading import Thread
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
-from bs4_parser import get_full_urls_for_href, parse_tags, parse_tags_by_class, parse_tag_by_id, get_attribute_by_class
+from bs4_parser import BS4Parse
 # from notion_db_call import get_configs_to_scrape, post_scraped_results
 # from config_types import is_valid_conf cig
 
 # configs = get_configs_to_scrape()
 
 configs = [
-    {
-        "url": "https://www.amazon.com/s?k=toys&s=date-desc-rank&pd_rd_r=198eabfe-75ec-469c-a989-9b43dad80bb2&pd_rd_w=26HV8&pd_rd_wg=Na0p2&pf_rd_p=779cadfb-bc4d-465d-931f-0b68c1ba5cd5&pf_rd_r=CV58886EY1Y28824VRD0&qid=1632870778&ref=pd_gw_unk",
-        "items": [
-            {
-                "tag":"span",
-                "class_name":"a-size-base-plus a-color-base a-text-normal"
-            }
-        ],
-
-    }
+    {        "url": "https://www.shafaq.com/en/All-News",        "items": [            {                "tag": "p",                "class_name": "mobile-title-breaking-news line-clamp-1 ltr-title dark:text-[#ABABAB]",            },                ],"wait_for_selector":"body > main > div.space-y-10.rounded-md.py-4 >div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3"    }
 
 ]
 print(configs)
@@ -45,7 +36,7 @@ def get_inner_html(config: object) -> object:
     # OPENS WEB DRIVER
     try:
         with sync_playwright() as p:
-
+            item_contents=[]
             browser = p.chromium.launch(
                 headless=PLAYWRIGHT_HEADLESS, timeout=PLAYWRIGHT_TIMEOUT)
 
@@ -61,33 +52,37 @@ def get_inner_html(config: object) -> object:
             page.wait_for_selector(w_sel)
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
+            
+            ParseObject = BS4Parse({"url":config["url"], "html":html, "items":config["items"]})
 
-            item_contents = get_tags(html, config["items"])
+            item_contents = get_tags(ParseObject, config["items"])
+            # print(html)
+            post_scraped_results({"url":config["url"],"results":item_contents[0]})
 
     except Exception as e:
 
-        print(e)
+        print("error",e)
         
         # miss.append(config["url"])
 
     return {"url": config["url"], "results": item_contents}
 
 
-def get_tags(html, items)->list[object]:
+def get_tags(BS4Parse, items)->list[object]:
     item_contents = []    
-
+    # print(BS4Parse)
     for item in items:
         
         keys = item.keys()
 
         if "class_name" in keys:
 
-            result = parse_tags_by_class(
-            item["tag"], item["class_name"], html)
+            result = BS4Parse.parse_tags_by_class(
+            item["tag"], item["class_name"])
 
         elif "id" in keys:
 
-            result = parse_tag_by_id(item["tag"], item["id"], html)
+            result = BS4Parse.parse_tag_by_id(item["tag"], item["id"])
 
         item_contents.append(result)
     

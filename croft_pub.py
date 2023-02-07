@@ -28,9 +28,9 @@ attributes = {
     "configs": configs
 }
 
-credentials_path = "/Users/tanjoen/Documents/web-scraper-pw/credentials/croft_pubsub_key.json"
+# credentials_path = "/Users/tanjoen/Documents/web-scraper-pw/credentials/croft_pubsub_key.json"
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
 
 topic_path = "projects/croft-pubsub/topics/croft-worker-scrape"
 

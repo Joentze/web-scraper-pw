@@ -6,7 +6,7 @@ class BS4Parse:
     def __init__(self, result_obj):
         self.url = result_obj["url"]
         self.items = result_obj["items"]
-        self.soup = BeautifulSoup(result_obj["html"])
+        self.soup = BeautifulSoup(result_obj["html"], "html.parser")
     
     def parse_tags(self, tag:str)->list:
         return self.soup.find_all(tag)

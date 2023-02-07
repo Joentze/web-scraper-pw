@@ -4,14 +4,13 @@ from concurrent.futures import TimeoutError
 import ast
 import os
 import json
-credentials_path = "/Users/tanjoen/Documents/web-scraper-pw/credentials/croft_pubsub_key.json"
+# credentials_path = "/Users/tanjoen/Documents/web-scraper-pw/credentials/croft_pubsub_key.json"
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
 
 subscriber_path = "projects/croft-pubsub/subscriptions/croft-worker-scrape-sub"
 
 subscriber = pubsub_v1.SubscriberClient()
-
 
 def callback(message):
     print("Receiving a new message!")
