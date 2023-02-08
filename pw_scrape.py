@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, DEFAULT_SELECTOR_TO_WAIT
 from bs4_parser import BS4Parse
-# from notion_db_call import get_configs_to_scrape, post_scraped_results
+from notion_db_call import post_scraped_results
 # from config_types import is_valid_conf cig
 
 # configs = get_configs_to_scrape()
@@ -17,7 +17,7 @@ configs = [
 print(configs)
 
 
-def segment_content(content: list[object], num_of_threads: int) -> None:
+def segment_content(content: list, num_of_threads: int) -> None:
     segments = [[] for i in range(num_of_threads)]
     for i, config in enumerate(content):
         multiplier = i // num_of_threads
@@ -68,7 +68,7 @@ def get_inner_html(config: object) -> object:
     return {"url": config["url"], "results": item_contents}
 
 
-def get_tags(BS4Parse, items)->list[object]:
+def get_tags(BS4Parse, items)->list:
     item_contents = []    
     # print(BS4Parse)
     for item in items:
@@ -89,7 +89,7 @@ def get_tags(BS4Parse, items)->list[object]:
     return item_contents
 
 
-def get_segment_inner_html(segment: list[object]) -> None:
+def get_segment_inner_html(segment: list) -> None:
     for config in segment:
         results = get_inner_html(config)
         try:

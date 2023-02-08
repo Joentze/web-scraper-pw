@@ -2,11 +2,11 @@ import os
 from requests import post, get
 import json
 import ast
-NOTION_DB_SCRAPE_ID = os.environ["NOTION_DB_SCRAPE_ID"]
+# NOTION_DB_SCRAPE_ID = os.environ["NOTION_DB_SCRAPE_ID"]
 NOTION_DB_RESULTS_ID = os.environ["NOTION_DB_RESULTS_ID"]
 NOTION_API_LINK = os.environ["NOTION_API_LINK"]
 
-def get_configs_to_scrape()->list[object]:
+def get_configs_to_scrape()->list:
     configs = []
     response = get(F"{NOTION_API_LINK}/db/{NOTION_DB_SCRAPE_ID}").json()
     for result in response["results"]:

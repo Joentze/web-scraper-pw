@@ -61,6 +61,7 @@ def index():
     data_configs = ast.literal_eval(string_obj)
     
     if data_configs and "configs" in data_configs:
+        print(data_configs)
         run_scraper(data_configs["configs"])
     else:
         return ("", 400)

@@ -18,8 +18,8 @@ class BS4Parse:
         return self.soup.find(tag, {"id":id})
 
     def get_attribute_by_class(self, attribute:str ,tag:str, class_name:str, html:str)->list:
-        return [tag[attribute] for tag in parse_tags_by_class(tag,class_name,html)]
+        return [tag[attribute] for tag in self.parse_tags_by_class(tag,class_name,html)]
 
-    def get_full_urls_for_href(self, config:object, tags:list[str], attr:str)->list[str]:
+    def get_full_urls_for_href(self, config:object, tags:list, attr:str)->list:
         return [urljoin(config["url"], tag[attr]) for tag in tags]
         
