@@ -7,13 +7,13 @@ NOTION_DB_RESULTS_ID = os.environ["NOTION_DB_RESULTS_ID"]
 NOTION_API_LINK = os.environ["NOTION_API_LINK"]
 
 
-def get_configs_to_scrape() -> list:
-    configs = []
-    response = get(F"{NOTION_API_LINK}/db/{NOTION_DB_SCRAPE_ID}").json()
-    for result in response["results"]:
-        configs.append(result["properties"]["Config"]
-                       ["rich_text"][0]["plain_text"])
-    return [ast.literal_eval(config) for config in configs]
+# def get_configs_to_scrape() -> list:
+#     configs = []
+#     response = get(F"{NOTION_API_LINK}/db/{NOTION_DB_SCRAPE_ID}").json()
+#     for result in response["results"]:
+#         configs.append(result["properties"]["Config"]
+#                        ["rich_text"][0]["plain_text"])
+#     return [ast.literal_eval(config) for config in configs]
 
 
 def post_scraped_results(results: list) -> None:

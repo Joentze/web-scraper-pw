@@ -7,6 +7,7 @@ from config import MAX_NUM_OF_THREADS, PLAYWRIGHT_HEADLESS, PLAYWRIGHT_TIMEOUT, 
 from bs4_parser import BS4Parse
 from notion_db_call import post_scraped_results
 # from config_types import is_valid_conf cig
+from selectolax_parser import scrape_items
 
 # configs = get_configs_to_scrape()
 
@@ -66,7 +67,7 @@ def get_inner_html(config: object) -> object:
 
         # miss.append(config["url"])
 
-    return {"url": config["url"], "results": item_contents}
+    return {"url": config["url"], }
 
 
 def get_tags(BS4Parse, items) -> list:
