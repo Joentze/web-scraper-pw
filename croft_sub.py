@@ -12,35 +12,6 @@ app = Flask(__name__)
 
 PORT = int(os.environ["PORT"])
 
-# # credentials_path = "/Users/tanjoen/Documents/web-scraper-pw/credentials/croft_pubsub_key.json"
-
-# # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
-
-# subscriber_path = "projects/croft-pubsub/subscriptions/croft-worker-scrape-sub"
-
-# subscriber = pubsub_v1.SubscriberClient()
-
-# def callback(message):
-#     print("Receiving a new message!")
-
-#     configs = message.data.decode("utf-8")
-
-#     configs = json.loads(configs.replace("'",'"'))
-
-#     if configs and "configs" in configs:
-#         run_scraper(configs["configs"])
-#     message.ack()
-
-# streaming_pull_futures = subscriber.subscribe(subscriber_path, callback)
-
-# while subscriber:
-#     try:
-#         streaming_pull_futures.result()
-#     except TimeoutError:
-#         streaming_pull_future.cancel()
-#         streaming_pull_futures.result()
-# print(future.result())
-
 
 @app.route("/", methods=["POST"])
 def index():
