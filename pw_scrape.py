@@ -15,7 +15,6 @@ configs = [
         "wait_for_selector": "body > main > div.space-y-10.rounded-md.py-4 >div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3"}
 
 ]
-print(configs)
 
 
 def segment_content(content: list, num_of_threads: int) -> None:
@@ -28,7 +27,6 @@ def segment_content(content: list, num_of_threads: int) -> None:
 
 def get_inner_html(config: object) -> object:
     html = ""
-    print("configs sent:", config)
     # SET DEFAULT WAIT SELECTOR
     if "wait_for_selector" not in config.keys():
         w_sel = "html"
@@ -58,7 +56,7 @@ def get_inner_html(config: object) -> object:
                 {"url": config["url"], "html": html, "items": config["items"]})
 
             item_contents = get_tags(ParseObject, config["items"])
-            print(html)
+
             post_scraped_results(
                 {"url": config["url"], "results": item_contents[0]})
 
@@ -94,11 +92,8 @@ def get_tags(BS4Parse, items) -> list:
 
 def get_segment_inner_html(segment: list) -> None:
     for config in segment:
-        results = get_inner_html(config)
         try:
-            # post_scraped_results(results)
-            print(results)
-            print([result.text for result in results["results"][0]])
+            get_inner_html(config)
         except Exception as e:
             print(e)
 
