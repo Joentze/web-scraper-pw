@@ -13,30 +13,35 @@ app = Flask(__name__)
 PORT = int(os.environ["PORT"])
 
 
+def check_post_data_format(envelope):
+    if not envelope:
+        return True
+    if not isinstance(envelope, dict) or "message" not in envelope:
+        return True
+    return False
+
+
+def message_obj(pubsub_message):
+    if isinstance(pubsub_message, dict) and "data" in pubsub_message:
+        string_obj = base64.b64decode(
+            pubsub_message["data"]).decode("utf-8").strip()
+        return ast.literal_eval(string_obj)
+
+
 @app.route("/", methods=["POST"])
 def index():
-    envelope = request.get_json()
 
     def scraper(configs):
         run_scraper(configs)
 
-    if not envelope:
-        msg = "no Pub/Sub message received"
-        print(f"error: {msg}")
-        return f"Bad Request: {msg}", 400
+    envelope = request.get_json()
 
-    if not isinstance(envelope, dict) or "message" not in envelope:
-        msg = "invalid Pub/Sub message format"
-        print(f"error: {msg}")
-        return f"Bad Request: {msg}", 400
+    if check_post_data_format(envelope):
+        return "Bad Request: Check Gcloud Pub/Sub message formating or message body type", 400
 
     pubsub_message = envelope["message"]
 
-    if isinstance(pubsub_message, dict) and "data" in pubsub_message:
-        string_obj = base64.b64decode(
-            pubsub_message["data"]).decode("utf-8").strip()
-
-    data_configs = ast.literal_eval(string_obj)
+    data_configs = message_obj(pubsub_message)
 
     if data_configs and "configs" in data_configs:
         thread = Thread(target=scraper, kwargs={
