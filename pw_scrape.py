@@ -11,7 +11,8 @@ from notion_db_call import post_scraped_results
 # configs = get_configs_to_scrape()
 
 configs = [
-    {        "url": "https://www.shafaq.com/en/All-News",        "items": [            {                "tag": "p",                "class_name": "mobile-title-breaking-news line-clamp-1 ltr-title dark:text-[#ABABAB]",            },                ],"wait_for_selector":"body > main > div.space-y-10.rounded-md.py-4 >div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3"    }
+    {"url": "https://www.shafaq.com/en/All-News",        "items": [{"tag": "p",                "class_name": "mobile-title-breaking-news line-clamp-1 ltr-title dark:text-[#ABABAB]", },],
+        "wait_for_selector": "body > main > div.space-y-10.rounded-md.py-4 >div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3"}
 
 ]
 print(configs)
@@ -27,7 +28,7 @@ def segment_content(content: list, num_of_threads: int) -> None:
 
 def get_inner_html(config: object) -> object:
     html = ""
-    
+    print("configs sent:", config)
     # SET DEFAULT WAIT SELECTOR
     if "wait_for_selector" not in config.keys():
         w_sel = "html"
@@ -36,7 +37,7 @@ def get_inner_html(config: object) -> object:
     # OPENS WEB DRIVER
     try:
         with sync_playwright() as p:
-            item_contents=[]
+            item_contents = []
             browser = p.chromium.launch(
                 headless=PLAYWRIGHT_HEADLESS, timeout=PLAYWRIGHT_TIMEOUT)
 
@@ -52,40 +53,42 @@ def get_inner_html(config: object) -> object:
             page.wait_for_selector(w_sel)
 
             html = page.inner_html(DEFAULT_SELECTOR_TO_WAIT)
-            
-            ParseObject = BS4Parse({"url":config["url"], "html":html, "items":config["items"]})
+
+            ParseObject = BS4Parse(
+                {"url": config["url"], "html": html, "items": config["items"]})
 
             item_contents = get_tags(ParseObject, config["items"])
-            # print(html)
-            post_scraped_results({"url":config["url"],"results":item_contents[0]})
+            print(html)
+            post_scraped_results(
+                {"url": config["url"], "results": item_contents[0]})
 
     except Exception as e:
 
-        print("error",e)
-        
+        print("error", e)
+
         # miss.append(config["url"])
 
     return {"url": config["url"], "results": item_contents}
 
 
-def get_tags(BS4Parse, items)->list:
-    item_contents = []    
+def get_tags(BS4Parse, items) -> list:
+    item_contents = []
     # print(BS4Parse)
     for item in items:
-        
+
         keys = item.keys()
 
         if "class_name" in keys:
 
             result = BS4Parse.parse_tags_by_class(
-            item["tag"], item["class_name"])
+                item["tag"], item["class_name"])
 
         elif "id" in keys:
 
             result = BS4Parse.parse_tag_by_id(item["tag"], item["id"])
 
         item_contents.append(result)
-    
+
     return item_contents
 
 

@@ -1,26 +1,9 @@
 from google.cloud import pubsub_v1
 import os
 
-configs=[
-    {
-        "url": "https://boundbywine.com/collections/wine-1/products/lagertal-holunder-goldtraminer-2020",
-        "items": [
-            {
-                "tag": "h1",
-                "class_name": "custom-font product-description-header",
-
-            }, {
-                "tag": "div",
-                "class_name": "accordion-container accordion-container--product",
-
-            }, {
-                "tag": "div",
-                "class_name": "description-block__content",
-
-            }
-        ],
-
-    }
+configs = [
+    {"url": "https://www.shafaq.com/en/All-News",        "items": [{"tag": "p",                "class_name": "mobile-title-breaking-news line-clamp-1 ltr-title dark:text-[#ABABAB]", },],
+        "wait_for_selector": "body > main > div.space-y-10.rounded-md.py-4 >div.grid.grid-cols-1.gap-5.md\:grid-cols-2.lg\:grid-cols-3"}
 
 ]
 
