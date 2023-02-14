@@ -1,15 +1,14 @@
 name: CRON_SCRAPE
 on:
-  # push:
-  #   branches:
-  #     - "feat/notion-db-git-cron"
-  schedule:
-    - cron: "*/30 * * * *"
+  push:
+    branches:
+      - "feat/notion-db-git-cron"
+
 jobs:
   container-cron-job:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:latest
+      image: mcr.microsoft.com/playwright:v1.29.1-focal
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
